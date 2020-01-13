@@ -11,7 +11,7 @@ LEARNING_RATE = 0.5
 EPOCHS = 1000
 
 f = Sigmoide()
-rn = RedNeuronal(2500, [2500,2,1], f)
+rn = RedNeuronal(2500, [2500,70,2,1], f)
 rn.cargar('genders')
 
 def obtener_imagen_aleatoria():
