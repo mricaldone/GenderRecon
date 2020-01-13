@@ -8,9 +8,16 @@ from NeuralNetwork.RedNeuronal import *
 from NeuralNetwork.Funciones import *
 
 LEARNING_RATE = 0.5
-EPOCHS = 1000
+EPOCHS = 10000
 
 f = Sigmoide()
+#FUNCIONA MUY BIEN PARA 10000 EPOCAS 0.5 LR (OVERFITTING?)
+#rn = RedNeuronal(2500, [2500,2,1], f)
+#FUNCIONA MAL PARA 1000 EPOCAS 0.5 y 1 LR
+#rn = RedNeuronal(2500, [2500,70,2,1], f)
+#FUNCIONA MUY MAL PARA 1000 EPOCAS 0.5 LR
+#rn = RedNeuronal(2500, [2500,242,22,2,1], f)
+
 rn = RedNeuronal(2500, [2500,70,2,1], f)
 rn.cargar('genders')
 
@@ -39,7 +46,7 @@ for i in range(EPOCHS):
 	rn.entrenar(img_vector, [tipo])
 	#input('CONTINUAR...')
 
-rn.guardar('genders')
+#rn.guardar('genders')
 
 while True:
 	file_path, tipo = obtener_imagen_aleatoria()
