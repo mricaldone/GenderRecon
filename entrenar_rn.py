@@ -19,22 +19,28 @@ f = Sigmoide()
 #rn = RedNeuronal(2500, [2500,242,22,2,1], f)
 
 rn = RedNeuronal(2500, [2500,70,2], f)
+
+print('CARGANDO RED...')
 rn.cargar('genders')
 
+def obtener_cara_aleatoria(dir_name):
+	file_list = os.listdir(dir_name)
+	r = random.randint(0,len(file_list) - 1)
+	file_name = file_list[r]
+	file_path = dir_name + '/' + file_name
+	return file_path
+	
 def obtener_imagen_aleatoria():
-	r1 = random.randint(0,1)
-	if r1 == 1:
+	r = random.randint(0,1)
+	if r == 1:
 		dir_name = 'hombres'
 		tipo = [1,0]
-	if r1 == 0:
+	if r == 0:
 		dir_name = 'mujeres'
 		tipo = [0,1]
-	file_list = os.listdir(dir_name)
-	r2 = random.randint(0,len(file_list) - 1)
-	file_name = file_list[r2]
-	file_path = dir_name + '/' + file_name
+	file_path = obtener_cara_aleatoria(dir_name)
 	return file_path, tipo
-
+		
 print('ENTRENANDO RED...')
 for i in range(EPOCHS):
 	print(str(i + 1) + '/' + str(EPOCHS), end='\r')
@@ -53,7 +59,7 @@ rn.guardar('genders')
 
 print('PROBANDO RED...')
 while True:
-	file_path, tipo = obtener_imagen_aleatoria()
+	file_path = obtener_cara_aleatoria('faces')
 	img_vector = np.matrix(Image.open(file_path).convert('L')).A1
 	img_vector = np.divide(img_vector,255)
 	resultado = rn.procesar(img_vector)
