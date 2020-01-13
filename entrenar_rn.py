@@ -13,7 +13,7 @@ EPOCHS = 10000
 f = Sigmoide()
 #FUNCIONA MUY BIEN PARA 10000 EPOCAS 0.5 LR (OVERFITTING?)
 #rn = RedNeuronal(2500, [2500,2,1], f)
-#FUNCIONA MAL PARA 1000 EPOCAS 0.5 y 1 LR
+#FUNCIONA MUY BIEN PARA 10000 EPOCAS 0.5 LR (OVERFITTING?)
 #rn = RedNeuronal(2500, [2500,70,2,1], f)
 #FUNCIONA MUY MAL PARA 1000 EPOCAS 0.5 LR
 #rn = RedNeuronal(2500, [2500,242,22,2,1], f)
@@ -35,7 +35,7 @@ def obtener_imagen_aleatoria():
 
 print('ENTRENANDO RED...')
 for i in range(EPOCHS):
-	print(str(i + 1) + '/' + str(EPOCHS))
+	print(str(i + 1) + '/' + str(EPOCHS), end='\r')
 	#ABRE DE MANERA ALEATORIA UNA IMAGEN DEL DIRECTORIO DE HOMBRES O MUJERES
 	file_path, tipo = obtener_imagen_aleatoria()
 	#CONVIERTE LA IMAGEN A VECTOR
@@ -46,8 +46,10 @@ for i in range(EPOCHS):
 	rn.entrenar(img_vector, [tipo])
 	#input('CONTINUAR...')
 
-#rn.guardar('genders')
+print('GUARDANDO RED...')
+rn.guardar('genders')
 
+print('PROBANDO RED...')
 while True:
 	file_path, tipo = obtener_imagen_aleatoria()
 	img_vector = np.matrix(Image.open(file_path).convert('L')).A1
@@ -55,10 +57,9 @@ while True:
 	resultado = rn.procesar(img_vector)[0]
 	print(resultado)
 	if round(resultado,0) == 1:
-		print('Resultado: Es hombre')
-		
+		print('Es hombre',round((resultado - 0.5) * 200, 1),'%')
 	else:
-		print('Es mujer')
+		print('Es mujer' ,round((0.5 - resultado) * 200, 1),'%')
 	if round(resultado,0) == tipo:
 		print('Correcto')
 	else:
