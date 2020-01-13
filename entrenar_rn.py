@@ -8,7 +8,7 @@ from NeuralNetwork.RedNeuronal import *
 from NeuralNetwork.Funciones import *
 
 LEARNING_RATE = 0.5
-EPOCHS = 1000
+EPOCHS = 2000
 
 f = Sigmoide()
 #FUNCIONA MUY BIEN PARA 10000 EPOCAS 0.5 LR (OVERFITTING?)
