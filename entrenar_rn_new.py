@@ -7,8 +7,9 @@ import numpy as np
 from NeuralNetwork.RedNeuronal import *
 from NeuralNetwork.Funciones import *
 
-LEARNING_RATE = 0.5
-EPOCHS = 10
+LEARNING_RATE = 0.5 #RATIO DE APRENDIZAJE
+EPOCHS = 20 #CANTIDAD DE VECES QUE SE REPITE CADA LOTE O DATASET
+MUESTRAS = 200 #CANTIDAD DE MUESTRAS DE CADA CLASE
 
 rn = RedNeuronal(2500, [2500,70,2], Sigmoide())
 
@@ -31,7 +32,7 @@ print('CARGANDO ROSTROS FEMENINOS...')
 rostros_femeninos = cargar_rostros('mujeres', [0,1])
 
 print('PREPARANDO ROSTROS')
-tam = min(len(rostros_masculinos), len(rostros_femeninos))
+tam = min(len(rostros_masculinos), len(rostros_femeninos), MUESTRAS)
 rostros = rostros_femeninos[:tam] + rostros_masculinos[:tam]
 random.shuffle(rostros)
 
@@ -45,8 +46,8 @@ for e in range(EPOCHS):
 		label = rostro[1]
 		rn.entrenar(imagen, label)
 
-#print('GUARDANDO RED...')
-#rn.guardar('genders')
+print('GUARDANDO RED...')
+rn.guardar('genders')
 
 print('CARGANDO ROSTROS DE PRUEBA...')
 rostros = cargar_rostros('faces', None)
