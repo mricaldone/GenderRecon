@@ -27,13 +27,17 @@ def imprimir_grafico(rn, paso, cant_decimales):
 	img = Image.fromarray(data, 'RGB')
 	img.transpose(Image.FLIP_TOP_BOTTOM).show()
 
+#ORIGINAL
 rn = RedNeuronal(2500, [2500,70,2], Sigmoide())
-rn.cargar('genders')
+#rn.cargar('genders')
 
 #print(rn.capas[1].matriz_w)
 #print(rn.capas[1].matriz_w[0,0:])
 
-pesos = rn.capas[1].matriz_w[0,0:]
+pesos = rn.capas[1].matriz_w[0,0:].tolist()
+
+print(type(pesos))
+print(pesos.size)
 
 maxval = np.amax(pesos)
 minval = np.amin(pesos)
