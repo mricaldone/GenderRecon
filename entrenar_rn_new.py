@@ -7,6 +7,8 @@ import numpy as np
 from NeuralNetwork.RedNeuronal import *
 from NeuralNetwork.Funciones import *
 
+#MEJOR RESULTADO LR=0.5 E=20 M=200
+
 LEARNING_RATE = 0.5 #RATIO DE APRENDIZAJE
 EPOCHS = 20 #CANTIDAD DE VECES QUE SE REPITE CADA LOTE O DATASET
 MUESTRAS = 200 #CANTIDAD DE MUESTRAS DE CADA CLASE
