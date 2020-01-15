@@ -71,7 +71,7 @@ for e in range(EPOCHS):
 		print(' ' * 10, end='\r')
 		if entrenar:
 			rn.entrenar(imagen, etiqueta)
-print(' ' * 40, end='\r')
+print(' ' * 60, end='\r')
 
 #print('GUARDANDO RED...')
 #rn.guardar('genders')
