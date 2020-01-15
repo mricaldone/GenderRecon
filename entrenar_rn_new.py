@@ -9,22 +9,25 @@ from NeuralNetwork.Funciones import *
 
 #MEJOR RESULTADO LR=0.5 E=20 M=200
 
-LEARNING_RATE = 0.5 #RATIO DE APRENDIZAJE
-EPOCHS = 20 #CANTIDAD DE VECES QUE SE REPITE CADA LOTE O DATASET
-MUESTRAS = 200 #CANTIDAD DE MUESTRAS DE CADA CLASE
+LEARNING_RATE = 0.5		#RATIO DE APRENDIZAJE
+EPOCHS = 20				#CANTIDAD DE VECES QUE SE REPITE CADA LOTE O DATASET
+SAMPLES = 200			#CANTIDAD DE MUESTRAS DE CADA CLASE
+TESTS = 0.25			#PORCENTAJE DE MUESTRAS UTILIZADAS PARA EL TEST
 
 rn = RedNeuronal(2500, [2500,70,2], Sigmoide())
 
-#print('CARGANDO RED...')
-#rn.cargar('genders')
+print('CARGANDO RED...')
+rn.cargar('genders')
 
 def cargar_rostros(dir_name, label):
 	rostros = []
 	file_list = os.listdir(dir_name)
 	for file_name in file_list:
-		rostro = np.matrix(Image.open(dir_name + '/' + file_name).convert('L')).A1
+		file_path = dir_name + '/' + file_name
+		rostro = np.matrix(Image.open(file_path).convert('L')).A1
 		rostro = np.divide(rostro, 255)
-		rostros.append((rostro,label,file_name))
+		rostros.append((rostro,label,file_path))
+	random.shuffle(rostros)
 	return rostros
 
 print('CARGANDO ROSTROS MASCULINOS...')
@@ -33,43 +36,42 @@ rostros_masculinos = cargar_rostros('hombres', [1,0])
 print('CARGANDO ROSTROS FEMENINOS...')
 rostros_femeninos = cargar_rostros('mujeres', [0,1])
 
-print('PREPARANDO ROSTROS')
-tam = min(len(rostros_masculinos), len(rostros_femeninos), MUESTRAS)
+print('PREPARANDO ROSTROS...')
+tam = min(len(rostros_masculinos), len(rostros_femeninos), SAMPLES)
 rostros = rostros_femeninos[:tam] + rostros_masculinos[:tam]
 random.shuffle(rostros)
+cut = int(len(rostros) * TESTS)
+rostros_test = rostros[:cut]
+rostros_train = rostros[cut:]
 
 print('ENTRENANDO RED...')
-total = EPOCHS * len(rostros)
 for e in range(EPOCHS):
-	for i,rostro in enumerate(rostros):
-		actual = e * len(rostros) + (i + 1)
-		print(str(actual) + '/' + str(total), end='\r')
+	for i,rostro in enumerate(rostros_train):
+		print('EPOCH:',str(e + 1) + '/' + str(EPOCHS),'SAMPLE:',str(i + 1) + '/' + str(len(rostros_train)),' ' * 10, end='\r')
 		imagen = rostro[0]
 		label = rostro[1]
 		rn.entrenar(imagen, label)
+print(' ' * 40, end='\r')
 
 print('GUARDANDO RED...')
 rn.guardar('genders')
 
-print('CARGANDO ROSTROS DE PRUEBA...')
-rostros = cargar_rostros('faces', None)
-random.shuffle(rostros)
-
 print('PROBANDO RED...')
-for rostro in rostros:
+aciertos = 0
+for i,rostro in enumerate(rostros_test):
 	imagen = rostro[0]
-	file_name = rostro[2]
+	etiqueta = rostro[1]
 	resultado = rn.procesar(imagen)
-	print("Rasgos masculinos:",round(resultado[0] * 100,2),"%")
-	print("Rasgos femeninos:",round(resultado[1] * 100,2),"%")
 	if resultado[0] > resultado[1]:
-		print('Es hombre')
+		if etiqueta[0] == 1:
+			aciertos += 1
 	else:
-		print('Es mujer')
-	img = Image.open('faces/' + file_name)
-	img.show()
-	input('Continuar...')
+		if etiqueta[1] == 1:
+			aciertos += 1
 
+print('Porcentaje de aciertos:',round(100*aciertos/(i+1),2),'%')
+
+input('FINALIZADO...')
 #pygame.init() 
 
 #white = (255, 255, 255)
