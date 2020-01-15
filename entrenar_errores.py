@@ -10,8 +10,8 @@ from NeuralNetwork.Funciones import *
 #MEJOR RESULTADO LR=0.5 E=20 M=200
 
 LEARNING_RATE = 0.5		#RATIO DE APRENDIZAJE
-EPOCHS = 20				#CANTIDAD DE VECES QUE SE REPITE CADA LOTE O DATASET
-SAMPLES = 200			#CANTIDAD DE MUESTRAS DE CADA CLASE
+EPOCHS = 40				#CANTIDAD DE VECES QUE SE REPITE CADA LOTE O DATASET
+SAMPLES = 400			#CANTIDAD DE MUESTRAS DE CADA CLASE
 TESTS = 0.25			#PORCENTAJE DE MUESTRAS UTILIZADAS PARA EL TEST
 
 def cargar_rostros(dir_name, label):
@@ -25,8 +25,22 @@ def cargar_rostros(dir_name, label):
 	random.shuffle(rostros)
 	return rostros
 
+def probar_red(rostros):
+	aciertos = 0
+	for i,rostro in enumerate(rostros):
+		imagen = rostro[0]
+		etiqueta = rostro[1]
+		resultado = rn.procesar(imagen)
+		if resultado[0] > resultado[1]:
+			if etiqueta[0] == 1:
+				aciertos += 1
+		else:
+			if etiqueta[1] == 1:
+				aciertos += 1
+	print('Porcentaje de aciertos:',round(100*aciertos/(i+1),2),'%')
+	
 #DEFINICION DE LA ESTRUCTURA DE LA RED
-rn = RedNeuronal(2500, [2500,70,2], Sigmoide())
+rn = RedNeuronal(2500, [2500,71,2], Sigmoide())
 
 #print('CARGANDO RED...')
 #rn.cargar('genders')
@@ -49,6 +63,7 @@ print('ENTRENANDO RED...')
 errores = 0
 total = 0
 for e in range(EPOCHS):
+	probar_red(rostros_test)
 	for i,rostro in enumerate(rostros_train):
 		entrenar = False
 		imagen = rostro[0]
@@ -71,25 +86,15 @@ for e in range(EPOCHS):
 		print(' ' * 10, end='\r')
 		if entrenar:
 			rn.entrenar(imagen, etiqueta)
+	print('')
 print(' ' * 60, end='\r')
+print('')
 
 #print('GUARDANDO RED...')
 #rn.guardar('genders')
 
 print('PROBANDO RED...')
-aciertos = 0
-for i,rostro in enumerate(rostros_test):
-	imagen = rostro[0]
-	etiqueta = rostro[1]
-	resultado = rn.procesar(imagen)
-	if resultado[0] > resultado[1]:
-		if etiqueta[0] == 1:
-			aciertos += 1
-	else:
-		if etiqueta[1] == 1:
-			aciertos += 1
-
-print('Porcentaje de aciertos:',round(100*aciertos/(i+1),2),'%')
+probar_red(rostros_test)
 
 input('FINALIZADO...')
 #pygame.init() 

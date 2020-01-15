@@ -1,0 +1,2 @@
+python entrenar_errores.py
+pause

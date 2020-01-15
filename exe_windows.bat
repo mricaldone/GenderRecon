@@ -1,2 +1,0 @@
-python entrenar_rn_new.py
-pause
