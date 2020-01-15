@@ -67,7 +67,7 @@ for e in range(EPOCHS):
 		print('ERROR:',round(100*errores/total,2),'%',' ',end='')
 		print(' ' * 10, end='\r')
 		rn.entrenar(imagen, etiqueta)
-print(' ' * 40, end='\r')
+print(' ' * 60, end='\r')
 
 print('GUARDANDO RED...')
 rn.guardar('genders')
