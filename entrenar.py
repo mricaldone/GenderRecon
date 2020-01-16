@@ -9,10 +9,15 @@ from NeuralNetwork.Funciones import *
 
 #MEJOR RESULTADO LR=0.5 E=20 M=200
 
-LEARNING_RATE = 0.5		#RATIO DE APRENDIZAJE
-EPOCHS = 40				#CANTIDAD DE VECES QUE SE REPITE CADA LOTE O DATASET
-SAMPLES = 1000			#CANTIDAD DE MUESTRAS DE CADA CLASE
-TESTS = 0.2				#PORCENTAJE DE MUESTRAS UTILIZADAS PARA EL TEST
+LEARNING_RATE = 0.5							#RATIO DE APRENDIZAJE
+EPOCHS = 50									#CANTIDAD DE VECES QUE SE REPITE CADA LOTE O DATASET
+SAMPLES = 1000								#CANTIDAD DE MUESTRAS DE CADA CLASE
+TESTS = 0.2									#PORCENTAJE DE MUESTRAS UTILIZADAS PARA EL TEST
+MALE_DATASET = 'datasets/random/males'		#DIRECTORIO CON FOTOS DE HOMBRES
+FEMALE_DATASET = 'datasets/random/females'	#DIRECTORIO CON FOTOS DE MUJERES
+
+#DEFINICION DE LA ESTRUCTURA DE LA RED
+rn = RedNeuronal(2500, [2500,71,2], Sigmoide())
 
 def cargar_rostros(dir_name, label):
 	rostros = []
@@ -39,17 +44,14 @@ def probar_red(rostros):
 				aciertos += 1
 	print('Porcentaje de aciertos:',round(100*aciertos/(i+1),2),'%')
 	
-#DEFINICION DE LA ESTRUCTURA DE LA RED
-rn = RedNeuronal(2500, [2500,71,2], Sigmoide())
-
 #print('CARGANDO RED...')
 #rn.cargar('genders')
 
 print('CARGANDO ROSTROS MASCULINOS...')
-rostros_masculinos = cargar_rostros('hombres', [1,0])
+rostros_masculinos = cargar_rostros(MALE_DATASET, [1,0])
 
 print('CARGANDO ROSTROS FEMENINOS...')
-rostros_femeninos = cargar_rostros('mujeres', [0,1])
+rostros_femeninos = cargar_rostros(FEMALE_DATASET, [0,1])
 
 print('PREPARANDO ROSTROS...')
 tam = min(len(rostros_masculinos), len(rostros_femeninos), SAMPLES)
@@ -86,8 +88,8 @@ for e in range(EPOCHS):
 print(' ' * 60, end='\r')
 print('')
 
-#print('GUARDANDO RED...')
-#rn.guardar('genders')
+print('GUARDANDO RED...')
+rn.guardar('genders')
 
 print('PROBANDO RED...')
 probar_red(rostros_test)
