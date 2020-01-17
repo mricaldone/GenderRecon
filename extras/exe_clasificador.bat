@@ -1,2 +1,0 @@
-python clasificador.py
-pause

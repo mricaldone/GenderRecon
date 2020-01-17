@@ -38,17 +38,11 @@ class RedNeuronal:
 		vector_dcoste = []
 		for valor_obtenido, valor_esperado in zip(valores_obtenidos, valores_esperados):
 			vector_dcoste.append(self.fcosto.derivada(valor_obtenido, valor_esperado))
-		return vector_dcoste
+		return np.matrix(vector_dcoste).T
 	
 	def _entrenar_capas(self, deltas, learning_rate):
 		for capa in reversed(self.capas):
 			deltas = capa.entrenar(deltas, learning_rate)
-	
-	def _calcular_tolerancia(self, valores_esperados, valores_obtenidos):
-		tolerancias = []
-		for valor_obtenido, valor_esperado in zip(valores_obtenidos, valores_esperados):
-			tolerancias.append(abs(valor_obtenido - valor_esperado))
-		return max(tolerancias)
 	
 	def procesar(self, entradas):
 		'''
@@ -74,46 +68,21 @@ class RedNeuronal:
 		#APLICO LA DERIVADA DE LA FUNCION DE COSTE
 		deltas = self._aplicar_derivada_de_coste(valores_obtenidos, valores_esperados)
 		#ENTRENO LAS CAPAS DE ATRAS HACIA ADELANTE
-		deltas = np.matrix(deltas).T
 		self._entrenar_capas(deltas, learning_rate)
-		return self._calcular_tolerancia(valores_esperados, valores_obtenidos)
-		
-	def entrenar_set(self, conjunto_de_entradas, conjunto_de_valores_esperados, learning_rate = 0.5, epochs = 10000, tolerancia = 0):
-		'''
-		ENTRENA A LA RED SEGUN UN CONJUNTO DE ENTRADAS Y SU CORRESPONDIENTE CONJUNTO DE VALORES ESPERADOS COMO RESULTADO. OPCIONALMENTE SE PUEDE INDICAR UN LEARNING RATE QUE MEJORA LA VELOCIDAD DE ENTRENAMIENTO.
-		PARAMETROS:
-			ENTRADAS: LISTA QUE CONTIENE CONJUNTOS DE LISTAS CON LOS PARAMETROS DE ENTRADA ENTRE 0 Y 1 (LIST[LIST[DOUBLE]])
-			VALORES ESPERADOS: LISTA QUE CONTIENE CONJUNTOS DE RESULTADOS ESPERADOS ENTRE 0 Y 1 (LIST[LIST[DOUBLE]])
-			EPOCHS: CANTIDAD MAXIMA DE ITERACIONES DE APRENDIZAJE (INT)
-			LEARNING_RATE: VELOCIDAD DE APRENDIZAJE. UN LR ALTO IMPLICA UNA MAYOR VELOCIDAD PARA ENCONTRAR EL RESULTADO, SIN EMBARGO PUEDE NO LLEGAR AL RESULTADO OPTIMO. (DOUBLE)
-			TOLERANCIA: VALOR MAXIMO DE ERROR ACEPTABLE. CUANDO SE ALCANZA ESTE VALOR PARA TODOS LOS CONJUNTOS DE ENTRADAS SE CORTAN LAS ITERACIONES. (DOUBLE)
-		'''
-		j = 0
-		for i in range(epochs):
-			stop = True
-			for entradas, valores_esperados in zip(conjunto_de_entradas, conjunto_de_valores_esperados):
-				j += 1
-				print("Entrada " + str(j) + "/" + str(len(conjunto_de_entradas) * epochs) + '\r',end='')
-				if self.entrenar(entradas, valores_esperados, learning_rate) > tolerancia:
-					stop = False
-			if stop:
-				break
-		print()
-		return i + 1
 		
 	def guardar(self, nombre):
 		datos = []
 		for i,capa in enumerate(self.capas):
 			datos.append(capa.obtener_pesos())
-		with open(nombre + '.dat', "w") as archivo:
+		with open(nombre, "w") as archivo:
 			archivo.write(str(datos))
 			
 	def cargar(self, nombre):
 		try:
-			with open(nombre + '.dat', "r") as archivo:
+			with open(nombre, "r") as archivo:
 				datos = eval(archivo.read())
 			for capa, pesos in zip(self.capas,datos):
 				capa.definir_pesos(pesos)
 		except:
-			print('[WARNING] El archivo de la red neuronal',nombre + '.dat no existe.')
+			print('[WARNING] El archivo de la red neuronal', nombre, 'no existe.')
 		

@@ -1,11 +1,9 @@
-#import pygame
 import random
 import os
-from PIL import Image
 import numpy as np
 
+from PIL import Image
 from NeuralNetwork.RedNeuronal import *
-from NeuralNetwork.Funciones import *
 
 #MEJOR RESULTADO LR=0.5 E=20 M=200
 
@@ -13,8 +11,8 @@ LEARNING_RATE = 0.5							#RATIO DE APRENDIZAJE
 EPOCHS = 50									#CANTIDAD DE VECES QUE SE REPITE CADA LOTE O DATASET
 SAMPLES = 1000								#CANTIDAD DE MUESTRAS DE CADA CLASE
 TESTS = 0.2									#PORCENTAJE DE MUESTRAS UTILIZADAS PARA EL TEST
-MALE_DATASET = 'datasets/random/males'		#DIRECTORIO CON FOTOS DE HOMBRES
-FEMALE_DATASET = 'datasets/random/females'	#DIRECTORIO CON FOTOS DE MUJERES
+MALE_DATASET = 'datasets/training/males'		#DIRECTORIO CON FOTOS DE HOMBRES
+FEMALE_DATASET = 'datasets/training/females'	#DIRECTORIO CON FOTOS DE MUJERES
 
 #DEFINICION DE LA ESTRUCTURA DE LA RED
 rn = RedNeuronal(2500, [2500,71,2], Sigmoide())
@@ -93,50 +91,7 @@ print(' ' * 60, end='\r')
 print('')
 
 print('GUARDANDO RED...')
-rn.guardar('genders')
+rn.guardar('genders.rn')
 
 print('PROBANDO RED...')
 probar_red(rostros_test)
-
-input('FINALIZADO...')
-#pygame.init() 
-
-#white = (255, 255, 255)
-#black = (0, 0, 0)
- 
-#X = 100
-#Y = 100
- 
-#display_surface = pygame.display.set_mode((X, Y )) 
-#pygame.display.set_caption('GenderRecon') 
-#image = pygame.image.load(r'faces/1.jpg')
-#font = pygame.font.Font('freesansbold.ttf', 12)
-
-#while True:
-#	file_path, tipo = obtener_imagen_aleatoria()
-#	img_vector = np.matrix(Image.open(file_path).convert('L')).A1
-#	img_vector = np.divide(img_vector,255)
-#	resultado = rn.procesar(img_vector)
-	#GUI
-#	display_surface.fill(black) 
-#	display_surface.blit(image, (25, 0)) 
-	
-#	val1 = round(resultado[0] * 100,2)
-#	text1 = font.render("Rasgos masculinos: " + str(val1), True, white, black)
-#	textRect1 = text1.get_rect()
-#	textRect1.center = (X // 2, 60)
-#	display_surface.blit(text1, textRect1)
-	
-#	val2 = round(resultado[1] * 100,2)
-#	text2 = font.render("Rasgos femeninos: " + str(val2), True, white, black)
-#	textRect2 = text2.get_rect()
-#	textRect2.center = (X // 2, 80)
-#	display_surface.blit(text2, textRect2)
-	
-#	for event in pygame.event.get() :  
-#		if event.type == pygame.QUIT : 
-#			pygame.quit() 
-#			quit()   
-#		pygame.display.update()
-	
-#	input("Continuar...")
