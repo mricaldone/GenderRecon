@@ -85,4 +85,12 @@ class RedNeuronal:
 				capa.definir_pesos(pesos)
 		except:
 			print('[WARNING] El archivo de la red neuronal', nombre, 'no existe.')
+	
+	def _aplicar_transformacion(self, x, x_min, x_max):
+		a = 2 / (x_max - x_min)
+		b = 1 - a * x_max
+		return a * x + b
+	
+	def transformar_entradas(self, entradas, min_val, max_val):
+		return map(lambda e: self._aplicar_transformacion(e, min_val, max_val), entradas)
 		
