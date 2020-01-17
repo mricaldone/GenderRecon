@@ -1,9 +1,15 @@
 # GenderRecon
 Red Neuronal que define el genero de una persona a partir de una imagen de su rostro (Formato: 50x50 en escala de grises).
+Se utiliza la siguiente red neuronal https://github.com/mricaldone/RedNeuronal.
+Es necesaria la instalcion de numpy y pil.
+```
+pip3 install numpy
+pip3 install Pillow
+```
 
 # Scripts
-<b>preprocesar_fotos.py</b> extrae todos los rostros encontrados en todas las fotos de la carpeta ''fotos'' y los guarda en formato 50x50 escala de grises en la carpeta ''faces''.
+**entrenar.py** entrena la red a partir de un dataset de rostros aleatorios generados por StyleGAN2, clasificados manualmente y preprocesados en escala de grises 50x50 para su utilización en esta red.
 
-<b>clasificador.py</b> muestra las fotos de la carpeta ''faces'' una a una y permite al usuario definir si el rostro corresponde a una mujer o a un hombre. En el caso de corresponder a una mujer la foto se mueve a la carpeta ''mujeres'' y en caso de ser hombre a ''hombres''.
+**entrenar_errores.py** análogo a entrenar.py, sólo que entrena unicamente los casos erroneos. Por lo que el entrenamiento es exponencialmente más rápido.
 
-<b>entrenar_rn.py</b> entrena a la red neuronal a partir de las imagenes encontradas en las carpetas ''mujeres'' y ''hombres''. Genera el archivo genders.dat que puede ser utilizado para volver a cargar los pesos de la red neuronal.
+**evaluar.py** pone a prueba la red utilizando un dataset de prueba generado por StyleGAN2.
